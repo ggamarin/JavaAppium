@@ -1,29 +1,19 @@
 package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
-import org.openqa.selenium.By;
+
 
 
 public class WelcomePageObject extends MainPageObject
 {
-    //Локаторы  Android
-    private static final String
-            STEP_LEARN_MORE_LINK = "org.wikipedia:id/addLangContainer",
-            STEP_NEW_WAYS_TO_EXPLORE = "//*[@text='New ways to explore']",
-            STEP_ADD_OR_EDIT_PREFERRED = "//*[@text='Reading lists with sync']",
-            STEP_LEARN_MORE_ABOUT_DATA_COLLECTED_LINK = "//*[@text='Send anonymous data']",
-            NEXT_LINK = "org.wikipedia:id/fragment_onboarding_forward_button",
-            GET_STARTED_BUTTON = "org.wikipedia:id/fragment_onboarding_done_button";
-
-    //Локаторы  iOS
-  /* private static final String
-           STEP_LEARN_MORE_LINK = "Learn more about Wikipedia",
-           STEP_NEW_WAYS_TO_EXPLORE = "New ways to explore",
-           STEP_ADD_OR_EDIT_PREFERRED = "Add or edit preferred languages",
-            STEP_LEARN_MORE_ABOUT_DATA_COLLECTED_LINK = "Learn more about data collected",
-           NEXT_LINK = "Next",
-           SKIP = "id:Skip",
-            GET_STARTED_BUTTON = "Get started";*/
+   protected static String
+           STEP_LEARN_MORE_LINK,
+           STEP_NEW_WAYS_TO_EXPLORE ,
+           STEP_ADD_OR_EDIT_PREFERRED ,
+            STEP_LEARN_MORE_ABOUT_DATA_COLLECTED_LINK ,
+           NEXT_LINK ,
+           SKIP ,
+            GET_STARTED_BUTTON ;
 
     public WelcomePageObject(AppiumDriver driver) {
         super(driver);
@@ -71,8 +61,8 @@ public class WelcomePageObject extends MainPageObject
                 10);
     }
 
-   /* public void clickSkip()
+   public void clickSkip()
     {
         this.waitForElementAndClick(SKIP, "Cannot find and click skip button", 5 );
-    }*/
+    }
 }
