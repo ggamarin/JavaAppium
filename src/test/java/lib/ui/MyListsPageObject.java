@@ -26,9 +26,13 @@ abstract public class MyListsPageObject extends MainPageObject {
         super(driver);
     }
 
+    protected String getFolderXpathByName(String name_of_Folder)
+    {
+        return FOLDER_BY_NAME_TPL.replace("{FOLDER_NAME}",name_of_Folder);
+    }
+
    public void openFolderByName(String name_of_folder)
     {
-
         String folder_name_xpath = getFolderXpathByName(name_of_folder);
         this.waitForElementAndClick(
                 folder_name_xpath,
@@ -37,11 +41,10 @@ abstract public class MyListsPageObject extends MainPageObject {
         );
     }
 
-    public void swipeByArticleToDelete(String article_title)
-    {
+    public void swipeByArticleToDelete(String article_title) throws InterruptedException {
+        Thread.sleep(2000);
         this.waitForArticleToAppearByTitle(article_title);
-        String article_xpath = getFolderXpathByName(article_title);
-
+        String article_xpath = getSavedArticleXpathByTitle(article_title);
         if (Platform.getInstance().isIOS() || Platform.getInstance().isAndroid()) {
             this.swipeElementToLeft(
                     article_xpath,
@@ -62,31 +65,26 @@ abstract public class MyListsPageObject extends MainPageObject {
         if (Platform.getInstance().isMW()) {
             driver.navigate().refresh();
         }
-
         this.waitForArticleToDisappearByTitle(article_title);
     }
 
     public void waitForArticleToDisappearByTitle(String article_title)
     {
-        String article_xpath = getFolderXpathByName(article_title);
+        String article_xpath = getSavedArticleXpathByTitle(article_title);
         this.waitForElementNotPresent(
                 article_xpath,
                 "Saved article still present with title" + article_title,
-                15);
+                10);
     }
 
-    public void waitForArticleToAppearByTitle(String article_title)
-    {
-        String article_xpath = getFolderXpathByName(article_title);
+    public void waitForArticleToAppearByTitle(String article_title)  {
+        String article_xpath = getSavedArticleXpathByTitle(article_title);
         this.waitForElementPresent(
                article_xpath,
                 "Cannot find saved article by title" + article_title,
-                15);
+                10);
     }
 
-    protected String getFolderXpathByName(String name_of_Folder)
-    {
-        return FOLDER_BY_NAME_TPL.replace("{FOLDER_NAME}",name_of_Folder);
-    }
+
 
 }

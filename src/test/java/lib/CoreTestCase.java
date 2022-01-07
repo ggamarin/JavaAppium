@@ -5,9 +5,7 @@ import junit.framework.TestCase;
 import lib.ui.WelcomePageObject;
 import org.openqa.selenium.ScreenOrientation;
 import org.openqa.selenium.remote.RemoteWebDriver;
-
 import java.time.Duration;
-import java.util.concurrent.TimeUnit;
 
 
 public class CoreTestCase extends TestCase {

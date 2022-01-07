@@ -18,7 +18,7 @@ public class MyListsTests extends CoreTestCase {
     password = "school443";
 
     @Test
-    public void testSaveFirstArticleToMyList()  {
+    public void testSaveFirstArticleToMyList() throws InterruptedException {
         SearchPageObject SearchPageObject = SearchPageObjectFactory.get(driver);
 
         SearchPageObject.initSearchInput();
@@ -29,7 +29,7 @@ public class MyListsTests extends CoreTestCase {
         ArticlePageObject.waitForTitleElement();
         String article_title = ArticlePageObject.getArticleTitle();
 
-        if(Platform.getInstance().isAndroid()){
+        if (Platform.getInstance().isAndroid()) {
             ArticlePageObject.addArticleToMyList(name_of_folder);
         } else {
             ArticlePageObject.addArticleToMySaved();
@@ -45,10 +45,7 @@ public class MyListsTests extends CoreTestCase {
             assertEquals("We are not on the same page after login",
                     article_title,
                     ArticlePageObject.getArticleTitle());
-
-            ArticlePageObject.addArticleToMySaved();
         }
-
         ArticlePageObject.closeArticle();
 
         NavigationUI NavigationUI = NavigationUIFactory.get(driver);
@@ -62,6 +59,7 @@ public class MyListsTests extends CoreTestCase {
         }
         MyListsPageObject.swipeByArticleToDelete(article_title);
     }
+
 
     @Test
     public void testSaveArticleInExistingFolder() throws InterruptedException {

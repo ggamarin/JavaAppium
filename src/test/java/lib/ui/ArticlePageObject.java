@@ -1,12 +1,9 @@
 package lib.ui;
 
-import io.appium.java_client.AppiumDriver;
-
 import lib.Platform;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
-import java.util.concurrent.TimeUnit;
 
 abstract public class ArticlePageObject extends  MainPageObject {
 
@@ -116,7 +113,6 @@ abstract public class ArticlePageObject extends  MainPageObject {
 
     public void addArticleToMySaved()  {
         if (Platform.getInstance().isMW()){
-            driver.manage().timeouts().implicitlyWait(12, TimeUnit.SECONDS);
             this.removeArticleFromSavedIfItAdded();
         }
 

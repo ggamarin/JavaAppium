@@ -1,6 +1,5 @@
 package lib.ui.ios;
 
-import io.appium.java_client.AppiumDriver;
 import lib.ui.WelcomePageObject;
 import org.openqa.selenium.remote.RemoteWebDriver;
 

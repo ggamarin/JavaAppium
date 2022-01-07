@@ -1,6 +1,5 @@
 package lib.ui.factories;
 
-import io.appium.java_client.AppiumDriver;
 import lib.Platform;
 import lib.ui.WelcomePageObject;
 import lib.ui.android.AndroidWelcomePageObject;
