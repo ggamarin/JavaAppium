@@ -1,1 +1,1 @@
-start emulator @and80 
+emulator @and80 &

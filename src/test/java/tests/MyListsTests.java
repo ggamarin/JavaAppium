@@ -13,15 +13,17 @@ import org.junit.Test;
 public class MyListsTests extends CoreTestCase {
 
     private static final String name_of_folder = "Learning programming";
+    private static final String
+    login = "Volj228",
+    password = "school443";
 
     @Test
-    public void testSaveFirstArticleToMyList()
-    {
+    public void testSaveFirstArticleToMyList()  {
         SearchPageObject SearchPageObject = SearchPageObjectFactory.get(driver);
 
         SearchPageObject.initSearchInput();
         SearchPageObject.typeSearchLine("Java");
-        SearchPageObject.clickByArticleWithSubstring("Object-oriented programming language");
+        SearchPageObject.clickByArticleWithSubstring("bject-oriented programming language");
 
         ArticlePageObject ArticlePageObject = ArticlePageObjectFactory.get(driver);
         ArticlePageObject.waitForTitleElement();
@@ -30,12 +32,27 @@ public class MyListsTests extends CoreTestCase {
         if(Platform.getInstance().isAndroid()){
             ArticlePageObject.addArticleToMyList(name_of_folder);
         } else {
-            ArticlePageObject.addArticlesToMySaved();
+            ArticlePageObject.addArticleToMySaved();
+        }
+        if (Platform.getInstance().isMW()) {
+            AuthorizationPageObject Auth = new AuthorizationPageObject(driver);
+            Auth.clickAuthButton();
+            Auth.enterLoginData(login, password);
+            Auth.submitForm();
+
+            ArticlePageObject.waitForTitleElement();
+
+            assertEquals("We are not on the same page after login",
+                    article_title,
+                    ArticlePageObject.getArticleTitle());
+
+            ArticlePageObject.addArticleToMySaved();
         }
 
         ArticlePageObject.closeArticle();
 
         NavigationUI NavigationUI = NavigationUIFactory.get(driver);
+        NavigationUI.openNavigation();
         NavigationUI.clickMyLists();
 
         MyListsPageObject MyListsPageObject = MyListsPageObjectFactory.get(driver);
@@ -47,7 +64,7 @@ public class MyListsTests extends CoreTestCase {
     }
 
     @Test
-    public void testSaveArticleInExistingFolder() {
+    public void testSaveArticleInExistingFolder() throws InterruptedException {
         SearchPageObject SearchPageObject = SearchPageObjectFactory.get(driver);
 
         SearchPageObject.initSearchInput();
@@ -61,20 +78,20 @@ public class MyListsTests extends CoreTestCase {
         if(Platform.getInstance().isAndroid()) {
             ArticlePageObject.addArticleToMyList(name_of_folder);
         }else {
-            ArticlePageObject.addArticlesToMySaved();
+            ArticlePageObject.addArticleToMySaved();
         }
         ArticlePageObject.closeArticle();
 
         SearchPageObject.initSearchInput();
         SearchPageObject.typeSearchLine("Java");
-        SearchPageObject.clickByArticleWithSubstring("Object-oriented programming language");
+        SearchPageObject.clickByArticleWithSubstring("bject-oriented programming language");
 
         ArticlePageObject.waitForTitleElement();
         String article_title_expected = ArticlePageObject.getArticleTitle();
         if (Platform.getInstance().isAndroid()) {
             ArticlePageObject.addArticleToExistingList(name_of_folder);
         } else {
-            ArticlePageObject.addArticlesToMySaved();
+            ArticlePageObject.addArticleToMySaved();
         }
         ArticlePageObject.closeArticle();
 

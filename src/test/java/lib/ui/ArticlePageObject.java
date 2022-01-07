@@ -4,6 +4,9 @@ import io.appium.java_client.AppiumDriver;
 
 import lib.Platform;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.RemoteWebDriver;
+
+import java.util.concurrent.TimeUnit;
 
 abstract public class ArticlePageObject extends  MainPageObject {
 
@@ -12,6 +15,7 @@ abstract public class ArticlePageObject extends  MainPageObject {
     FOOTER_ELEMENT,
     OPTIONS_BUTTON ,
     OPTIONS_ADD_TO_MY_LIST_BUTTON ,
+    OPTIONS_REMOVE_FROM_MY_LIST_BUTTON,
     ADD_TO_MY_LIST_OVERLAY,
     MY_LIST_NAME_INPUT,
     MY_LIST_OK_BUTTON ,
@@ -20,7 +24,7 @@ abstract public class ArticlePageObject extends  MainPageObject {
     FOLDER_BY_NAME_TPL;
 
 
-    public ArticlePageObject(AppiumDriver driver)
+    public ArticlePageObject(RemoteWebDriver driver)
     {
         super(driver);
     }
@@ -38,8 +42,10 @@ abstract public class ArticlePageObject extends  MainPageObject {
         WebElement title_element = waitForTitleElement();
         if (Platform.getInstance().isAndroid()) {
             return title_element.getAttribute("text");
-        } else {
+        } else if (Platform.getInstance().isIOS()){
             return title_element.getAttribute("name");
+        } else {
+            return title_element.getText();
         }
     }
 
@@ -49,11 +55,16 @@ abstract public class ArticlePageObject extends  MainPageObject {
             this.swipeUpToFindElement(
                     FOOTER_ELEMENT,
                     "Cannot find the end of the article",
-                    40
-            );
-        } else {
-            this.swipeUpTillElementAppear(FOOTER_ELEMENT,
+                    40);
+        } else if (Platform.getInstance().isIOS()){
+            this.swipeUpTillElementAppear(
+                    FOOTER_ELEMENT,
                     "Cannot find the end of the article",
+                    40);
+        } else {
+            this.scrollWebPageTillElementNotVisible(
+                    FOOTER_ELEMENT,
+                    "Cannot find the end of article",
                     40);
         }
     }
@@ -102,21 +113,47 @@ abstract public class ArticlePageObject extends  MainPageObject {
         );
     }
 
-    public void addArticlesToMySaved()
-    {
-        this.waitForElementAndClick(OPTIONS_ADD_TO_MY_LIST_BUTTON,
-                "Cannot find option to add article to reading list",
-                5);
-    }
 
-    public void closeArticle()
-    {
+    public void addArticleToMySaved()  {
+        if (Platform.getInstance().isMW()){
+            driver.manage().timeouts().implicitlyWait(12, TimeUnit.SECONDS);
+            this.removeArticleFromSavedIfItAdded();
+        }
+
         this.waitForElementAndClick(
-                CLOSE_ARTICLE_BUTTON,
-                "Cannot close article, cannot find X link",
+                OPTIONS_ADD_TO_MY_LIST_BUTTON,
+                "Cannot find option to add article to reading list",
                 5
         );
     }
+
+    public void removeArticleFromSavedIfItAdded()
+    {
+        if (this.isElementPresent(OPTIONS_REMOVE_FROM_MY_LIST_BUTTON)) {
+            this.waitForElementAndClick(
+                    OPTIONS_REMOVE_FROM_MY_LIST_BUTTON,
+                    "Cannot click button to remove an article from saved",
+                    1);
+            this.waitForElementPresent(
+                    OPTIONS_ADD_TO_MY_LIST_BUTTON,
+                    "Cannot find button to add an article to saved list after removing from this list before");
+        }
+    }
+
+
+    public void closeArticle()
+    {
+        if (Platform.getInstance().isIOS() || Platform.getInstance().isAndroid()) {
+            this.waitForElementAndClick(
+                    CLOSE_ARTICLE_BUTTON,
+                    "Cannot close article, cannot find X link",
+                    5
+            );
+        } else {
+            System.out.println("Method closeArticle() do nothing for platform" +  Platform.getInstance().getPlatformVar());
+        }
+    }
+
     protected String getFolderXpathByName(String name_of_Folder)
     {
         return FOLDER_BY_NAME_TPL.replace("{FOLDER_NAME}",name_of_Folder);

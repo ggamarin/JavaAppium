@@ -8,7 +8,9 @@ import lib.Platform;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -20,9 +22,9 @@ import java.util.regex.Pattern;
 public class MainPageObject {
 
 
-    protected AppiumDriver driver;
+    protected RemoteWebDriver driver;
 
-    public MainPageObject(AppiumDriver driver)
+    public MainPageObject(RemoteWebDriver driver)
     {
         this.driver = driver;
     }
@@ -89,21 +91,47 @@ public class MainPageObject {
 
     public void swipeUp(int timeofSwipe)
     {
-        TouchAction action = new TouchAction(driver);
-        Dimension size = driver.manage().window().getSize();
-        int x = size.width/2;
-        int start_y = (int) (size.height * 0.8);
-        int end_y = (int) (size.height * 0.2);
-        action.press(PointOption.point(x, start_y))
-                .waitAction(WaitOptions.waitOptions(Duration.ofMillis(timeofSwipe)))
-                .moveTo(PointOption.point(x, end_y))
-                .release()
-                .perform();
-    }
+        if (driver instanceof AppiumDriver) {
+            TouchAction action = new TouchAction((AppiumDriver) driver);
+            Dimension size = driver.manage().window().getSize();
+            int x = size.width / 2;
+            int start_y = (int) (size.height * 0.8);
+            int end_y = (int) (size.height * 0.2);
+            action.press(PointOption.point(x, start_y))
+                    .waitAction(WaitOptions.waitOptions(Duration.ofMillis(timeofSwipe)))
+                    .moveTo(PointOption.point(x, end_y))
+                    .release()
+                    .perform();
+        } else {
+                System.out.println(("Method swipeUp() does nothing for platform" + Platform.getInstance().getPlatformVar()));
+            }
+        }
+
 
     public void  swipeUpQuick()
     {
         swipeUp(200);
+    }
+
+    public void scrollWebPageUP(){
+        if (Platform.getInstance().isMW()){
+            JavascriptExecutor JSExecutor = (JavascriptExecutor)  driver;
+            JSExecutor.executeScript("window.scrollBy(0, 250)");
+        } else{
+            System.out.println("Method scrollWebPageUP() does nothing for platform" + Platform.getInstance().getPlatformVar());
+        }
+    }
+
+    public void scrollWebPageTillElementNotVisible(String locator, String error_message, int max_swipes){
+        int already_swiped = 0;
+        WebElement element= this.waitForElementPresent(locator, error_message);
+        while (!this.isElementLocatedOnTheScreen(locator)){
+            scrollWebPageUP();
+            ++already_swiped;
+            if (already_swiped > max_swipes){
+                Assert.assertTrue(error_message, element.isDisplayed());
+            }
+        }
     }
 
     public void swipeUpToFindElement(String locator, String error_message, int max_swipes)
@@ -137,9 +165,12 @@ public class MainPageObject {
     public boolean isElementLocatedOnTheScreen(String locator)
     {
         //находим эл-т по локатору и получаем его расположение по оси Y
-        int element_location_by_y = this.waitForElementPresent(locator,"Cannot find element by locator",5)
-                .getLocation()
-                .getY();
+        int element_location_by_y = this.waitForElementPresent(locator,"Cannot find element by locator",5).getLocation().getY();
+        if (Platform.getInstance().isMW()){
+            JavascriptExecutor JSExecutor = (JavascriptExecutor)driver;
+            Object js_result = JSExecutor.executeScript("return window.pageYOffset");
+            element_location_by_y -= Integer.parseInt(js_result.toString()); //сначала результат выполнения jscript переводим в string, потом парсим в int и вычитаем из element_location_by_y, получаем текущее положение элемента, относительно текущей позиции экрана
+        }
         int screen_size_by_y = driver.manage().window().getSize().getHeight(); //получаем длину всего экрана
         //пока не доскролим до переменной screen_size_by_y будем возвращать false, как только доберемся - true
         return element_location_by_y < screen_size_by_y;
@@ -148,6 +179,7 @@ public class MainPageObject {
     // Для iOS: метод будет кликать по кнопке удаления (красная корзина) для удалении статьи из избранного
     public void clickElementToTheRightUpperCorner(String locator, String error_message)
     {
+        if (driver instanceof AppiumDriver){
         WebElement element = this.waitForElementPresent(locator + "/..",error_message); //locator + "/.." - переход на элемент выше
         int right_x = element.getLocation().getX();
         int upper_y = element.getLocation().getY();
@@ -158,34 +190,40 @@ public class MainPageObject {
         int point_to_click_x = (right_x + width) - 3;  //на 3 пикселя левее чем ширина элемента
         int point_to_click_y = middle_y;
 
-        TouchAction action = new TouchAction(driver);
+        TouchAction action = new TouchAction((AppiumDriver) driver);
         action.tap(PointOption.point(point_to_click_x,point_to_click_y)).perform();
+    } else {
+            System.out.println(("Method clickElementToTheRightUpperCorner() does nothing for platform" + Platform.getInstance().getPlatformVar()));
+        }
     }
 
-    public void swipeElementToLeft(String locator, String error_message)
-    {
-        WebElement element =  waitForElementPresent(locator, error_message,10);
-        int left_x = element.getLocation().getX();
-        int right_x = left_x + element.getSize().getWidth();
-        int upper_y = element.getLocation().getY();
-        int lower_y = upper_y + element.getSize().getHeight();
-        int middle_y = (upper_y + lower_y) /2;
+    public void swipeElementToLeft(String locator, String error_message) {
+        if (driver instanceof AppiumDriver) {
+            WebElement element = waitForElementPresent(locator, error_message, 10);
+            int left_x = element.getLocation().getX();
+            int right_x = left_x + element.getSize().getWidth();
+            int upper_y = element.getLocation().getY();
+            int lower_y = upper_y + element.getSize().getHeight();
+            int middle_y = (upper_y + lower_y) / 2;
 
-        TouchAction action = new TouchAction(driver);
-        action.press(PointOption.point(right_x,middle_y));
+            TouchAction action = new TouchAction((AppiumDriver) driver);
+            action.press(PointOption.point(right_x, middle_y));
 
-        //В Android работаем с относительными координатами, относительно элемента
-        //и свайпаем от точке к точке, то в iOS  свайпаем на определенную ширину от начальной точки. Поэтому для iOS будем свайпать на
-        //всю ширину элемента.
-        action.waitAction(WaitOptions.waitOptions(Duration.ofMillis(300)));
-        if(Platform.getInstance().isAndroid()) {
-            action.moveTo(PointOption.point(left_x, middle_y));
+            //В Android работаем с относительными координатами, относительно элемента
+            //и свайпаем от точке к точке, то в iOS  свайпаем на определенную ширину от начальной точки. Поэтому для iOS будем свайпать на
+            //всю ширину элемента.
+            action.waitAction(WaitOptions.waitOptions(Duration.ofMillis(300)));
+            if (Platform.getInstance().isAndroid()) {
+                action.moveTo(PointOption.point(left_x, middle_y));
+            } else {
+                int offset_x = (-1 * element.getSize().getWidth());         //(-1 * ширину эл-та), т.е. крайняя левая точка
+                action.moveTo(PointOption.point(offset_x, 0));       //свайп на всю ширину эл-та
+            }
+            action.release();
+            action.perform();
         } else {
-            int offset_x = (-1 * element.getSize().getWidth());         //(-1 * ширину эл-та), т.е. крайняя левая точка
-            action.moveTo(PointOption.point(offset_x, 0));       //свайп на всю ширину эл-та
+            System.out.println(("Method swipeElementToLeft() does nothing for platform" + Platform.getInstance().getPlatformVar()));
         }
-                action.release();
-                action.perform();
     }
 
     public int getAmountOfElements(String locator)
@@ -193,6 +231,26 @@ public class MainPageObject {
         By by = this.getLocatorByString(locator);
         List elements = driver.findElements(by);
         return  elements.size();
+    }
+
+    public boolean isElementPresent(String locator){
+        return getAmountOfElements(locator) > 0;
+    }
+
+    public void tryClickElementWithFewAttempts(String locator, String error_message, int amount_of_attempts) {
+        int current_attempts = 0;
+        boolean need_more_attempts = true;
+        while (need_more_attempts) {
+            try {
+                this.waitForElementAndClick(locator, error_message,1);
+                need_more_attempts = false;
+            } catch (Exception e) {
+                if (current_attempts > amount_of_attempts) {
+                    this.waitForElementAndClick(locator, error_message,1);
+                }
+            }
+            ++ current_attempts;
+        }
     }
 
     public void assertElementNotPresent(String locator, String error_message)
@@ -228,25 +286,12 @@ public class MainPageObject {
         if (byType.equals("xpath")) {
             return By.xpath(locator);
         } else if (byType.equals("id")) {
-            return  By.id(locator);
+            return By.id(locator);
+        } else if (byType.equals("css")){
+            return By.cssSelector(locator);
         } else {
             throw new IllegalArgumentException("Cannot get type of locator. Locator: " + locatorWithType);
         }
     }
 
-    /*protected String getFolderXpathByName(String name_of_Folder)
-    {
-        return FOLDER_BY_NAME_TPL.replace("{FOLDER_NAME}",name_of_Folder);
-    }
-
-    public void openFolderByName(String name_of_folder)
-    {
-
-        String folder_name_xpath = getFolderXpathByName(name_of_folder);
-        this.waitForElementAndClick(
-                folder_name_xpath,
-                "Cannot find created folder",
-                10
-        );
-    }*/
 }

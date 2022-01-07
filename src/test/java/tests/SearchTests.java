@@ -9,7 +9,7 @@ import org.junit.Test;
 public class SearchTests extends CoreTestCase {
 
     @Test
-    public void testSearch() {
+    public void testSearch() throws InterruptedException {
 
         SearchPageObject SearchPageObject = SearchPageObjectFactory.get(driver);
 
@@ -19,7 +19,7 @@ public class SearchTests extends CoreTestCase {
     }
 
     @Test
-    public void testCancelSearch() {
+    public void testCancelSearch() throws InterruptedException {
 
         SearchPageObject SearchPageObject = SearchPageObjectFactory.get(driver);
 

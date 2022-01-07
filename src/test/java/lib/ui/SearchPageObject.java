@@ -2,6 +2,7 @@ package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
 import org.openqa.selenium.By;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -17,7 +18,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
     TEXT_ELEMENT ,
     SEARCH_RESULT_TITLE ;
 
-    public SearchPageObject(AppiumDriver driver)
+    public SearchPageObject(RemoteWebDriver driver)
     {
         super(driver);
     }
@@ -87,7 +88,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
     public void typeSearchLine(String search_line)
     {
-        this.waitForElementAndSendKeys(SEARCH_INPUT, search_line,"Cannot find and type into search input", 5);
+        this.waitForElementAndSendKeys(SEARCH_INPUT,
+                search_line,"Cannot find and type into search input",
+                5);
     }
 
     public void waitForSearchResult(String substring)
@@ -121,9 +124,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
     }
 
-   public  void elementContainsText() {
+   /*public  void elementContainsText() {
        this.assertElementHasText(TEXT_ELEMENT,
                "Search…",
                "Unexpected text");
-   }
+   }*/
 }

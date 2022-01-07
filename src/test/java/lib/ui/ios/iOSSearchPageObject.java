@@ -2,6 +2,7 @@ package lib.ui.ios;
 
 import io.appium.java_client.AppiumDriver;
 import lib.ui.SearchPageObject;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 public class iOSSearchPageObject extends SearchPageObject {
     static {
@@ -17,7 +18,7 @@ public class iOSSearchPageObject extends SearchPageObject {
         SEARCH_RESULT_TITLE = "xpath://*[@resource-id='org.wikipedia:id/view_page_header_container']/*[@resource-id='org.wikipedia:id/view_page_title_text']";
     }
 
-    public iOSSearchPageObject(AppiumDriver driver)
+    public iOSSearchPageObject(RemoteWebDriver driver)
     {
         super(driver);
     }
