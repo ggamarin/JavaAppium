@@ -10,8 +10,7 @@ import org.junit.Test;
 public class ArticleTests extends CoreTestCase {
 
     @Test
-    public void testCompareArticleTitle()
-    {
+    public void testCompareArticleTitle () throws InterruptedException {
         SearchPageObject SearchPageObject = SearchPageObjectFactory.get(driver);
 
         SearchPageObject.initSearchInput();
@@ -28,7 +27,7 @@ public class ArticleTests extends CoreTestCase {
     }
 
     @Test
-    public void testSwipeArticle()
+    public void testSwipeArticle() throws InterruptedException
     {
         SearchPageObject SearchPageObject = SearchPageObjectFactory.get(driver);
 

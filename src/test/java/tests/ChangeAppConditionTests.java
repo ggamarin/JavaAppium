@@ -10,7 +10,7 @@ import org.junit.Test;
 
 public class ChangeAppConditionTests extends CoreTestCase {
     @Test
-    public void testChangesScreenOrientationOnSearchResults()
+    public void testChangesScreenOrientationOnSearchResults() throws InterruptedException
     {
         if(Platform.getInstance().isMW()){
             return;

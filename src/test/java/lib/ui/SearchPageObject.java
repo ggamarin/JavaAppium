@@ -95,8 +95,8 @@ import org.openqa.selenium.remote.RemoteWebDriver;
         this.waitForElementPresent(search_result_xpath, "Cannot find search result with substring" + substring);
     }
 
-    public void clickByArticleWithSubstring(String substring)
-    {
+    public void clickByArticleWithSubstring(String substring) throws InterruptedException {
+        Thread.sleep(2000);
         String search_result_xpath = getResultSearchElement(substring);
         this.waitForElementAndClick(search_result_xpath,
                 "Cannot find and click search result with substring" + substring,

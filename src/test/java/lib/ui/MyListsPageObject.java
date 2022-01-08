@@ -1,6 +1,7 @@
 package lib.ui;
 
 import lib.Platform;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 
@@ -9,6 +10,8 @@ abstract public class MyListsPageObject extends MainPageObject {
     protected static  String
             ARTICLE_BY_TITLE_TPL,
             FOLDER_BY_NAME_TPL,
+    DESCRIPTION,
+            ARTICLE_BY_DESCRIPTION_TPL,
     REMOVE_FROM_SAVED_BUTTON;
 
 
@@ -20,6 +23,10 @@ abstract public class MyListsPageObject extends MainPageObject {
         {
             return REMOVE_FROM_SAVED_BUTTON.replace("{TITLE}", article_title);
         }
+
+    private static  String getSavedArticleDescriptionXpath(String description){
+        return  ARTICLE_BY_DESCRIPTION_TPL.replace("{DESCRIPTION}",description);
+    }
 
     public MyListsPageObject(RemoteWebDriver driver)
     {
@@ -85,6 +92,19 @@ abstract public class MyListsPageObject extends MainPageObject {
                 10);
     }
 
-
-
+    public WebElement getDescription(String description) {
+        if (Platform.getInstance().isAndroid()) {
+            return this.waitForElementPresent(
+                    DESCRIPTION,
+                    "Cannot find description",
+                    10
+            );
+        } else {
+            return this.waitForElementPresent(
+                    getSavedArticleDescriptionXpath(description),
+                    "Cannot find description",
+                    10
+            );
+        }
+    }
 }
