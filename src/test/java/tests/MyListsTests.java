@@ -12,7 +12,7 @@ import org.junit.Test;
 
 public class MyListsTests extends CoreTestCase {
 
-    private static final String name_of_folder = "Learning programming";
+    private static final String name_of_folder = "My list";
     private static final String
     login = "Volj228",
     password = "school443";
@@ -139,8 +139,8 @@ public class MyListsTests extends CoreTestCase {
         if (Platform.getInstance().isAndroid()) {
             assertEquals(
                     "Unexpected description",
-                    article_description2.toLowerCase(),
-                    MyListPageObject.getDescription(article_description2).getAttribute("text").toLowerCase()
+                    article_description3.toLowerCase(),
+                    MyListPageObject.getDescription(article_description3).getAttribute("text").toLowerCase()
             );
         } else {
             assertEquals(
