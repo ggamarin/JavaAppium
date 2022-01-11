@@ -7,6 +7,7 @@ import lib.ui.factories.ArticlePageObjectFactory;
 import lib.ui.factories.MyListsPageObjectFactory;
 import lib.ui.factories.NavigationUIFactory;
 import lib.ui.factories.SearchPageObjectFactory;
+import org.junit.Assert;
 import org.junit.Test;
 
 
@@ -42,7 +43,7 @@ public class MyListsTests extends CoreTestCase {
 
             ArticlePageObject.waitForTitleElement();
 
-            assertEquals("We are not on the same page after login",
+            Assert.assertEquals("We are not on the same page after login",
                     article_title,
                     ArticlePageObject.getArticleTitle());
         }
@@ -95,7 +96,7 @@ public class MyListsTests extends CoreTestCase {
 
             ArticlePageObject.waitForTitleElement();
 
-            assertEquals("We are not on the same page after login",
+            Assert.assertEquals("We are not on the same page after login",
                     article_title1,
                     ArticlePageObject.getArticleTitle());
         }
@@ -137,13 +138,13 @@ public class MyListsTests extends CoreTestCase {
         MyListPageObject.waitForArticleToDisappearByTitle(article_title1);
 
         if (Platform.getInstance().isAndroid()) {
-            assertEquals(
+            Assert.assertEquals(
                     "Unexpected description",
                     article_description3.toLowerCase(),
                     MyListPageObject.getDescription(article_description3).getAttribute("text").toLowerCase()
             );
         } else {
-            assertEquals(
+            Assert.assertEquals(
                     "Unexpected title",
                     article_title,
                     article_title2
