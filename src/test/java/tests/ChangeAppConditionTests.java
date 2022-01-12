@@ -1,5 +1,7 @@
 package tests;
 
+import io.qameta.allure.*;
+import io.qameta.allure.junit4.DisplayName;
 import lib.CoreTestCase;
 import lib.Platform;
 import lib.ui.ArticlePageObject;
@@ -9,8 +11,13 @@ import lib.ui.factories.SearchPageObjectFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
+@Epic("Tests for change application conditions")
 public class ChangeAppConditionTests extends CoreTestCase {
     @Test
+    @Features(value={@Feature(value="Search"),@Feature(value = "Article"),@Feature(value = "Condition")})
+    @DisplayName("Change screen orientation on search results")
+    @Description("Opens an article, rotate the screen and checks that the article has not changed.")
+    @Severity(value = SeverityLevel.NORMAL)
     public void testChangesScreenOrientationOnSearchResults() throws InterruptedException
     {
         if(Platform.getInstance().isMW()){
@@ -44,6 +51,10 @@ public class ChangeAppConditionTests extends CoreTestCase {
     }
 
     @Test
+    @Features(value={@Feature(value="Search"),@Feature(value = "Article"),@Feature(value = "Condition")})
+    @DisplayName("Check search article in background")
+    @Description("Checking that after the application returns from the background, the search results still present.")
+    @Severity(value = SeverityLevel.NORMAL)
     public void testCheckSearchArticleInBackground()
     {
         if(Platform.getInstance().isMW()){

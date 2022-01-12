@@ -1,6 +1,7 @@
 package lib.ui;
 
 
+import io.qameta.allure.Step;
 import lib.Platform;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
@@ -15,6 +16,7 @@ abstract public class NavigationUI extends MainPageObject {
         super(driver);
     }
 
+    @Step("Open navigation menu( for MobileWeb)")
     public void openNavigation() throws InterruptedException {
         if (Platform.getInstance().isMW()) {
             Thread.sleep(1000);
@@ -24,6 +26,7 @@ abstract public class NavigationUI extends MainPageObject {
         }
     }
 
+    @Step("Click My list")
     public void clickMyLists() throws InterruptedException {
         if (Platform.getInstance().isMW()) {
             this.tryClickElementWithFewAttempts(
@@ -37,7 +40,9 @@ abstract public class NavigationUI extends MainPageObject {
                     MY_LISTS_LINK,
                     "Cannot find navigation button to My list",
                     5);
-            this.waitForElementPresent(ITEM_CONTAINER, "Cannot find folder", 10);
+            this.waitForElementPresent(ITEM_CONTAINER,
+                    "Cannot find folder",
+                    10);
         }
     }
 }

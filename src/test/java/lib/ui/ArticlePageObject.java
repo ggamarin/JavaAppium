@@ -154,14 +154,15 @@ abstract public class ArticlePageObject extends  MainPageObject {
         }
     }
 
+
     protected String getFolderXpathByName(String name_of_Folder)
     {
         return FOLDER_BY_NAME_TPL.replace("{FOLDER_NAME}",name_of_Folder);
     }
 
+    @Step("Opening folder by name in reading list")
     public void openFolderByName(String name_of_folder)
     {
-
         String folder_name_xpath = getFolderXpathByName(name_of_folder);
         this.waitForElementAndClick(
                 folder_name_xpath,
@@ -170,6 +171,7 @@ abstract public class ArticlePageObject extends  MainPageObject {
         );
     }
 
+    @Step("Adding the article to the existing list")
     public void addArticleToExistingList(String name_of_folder)
     {
         this.waitForElementAndClick(
